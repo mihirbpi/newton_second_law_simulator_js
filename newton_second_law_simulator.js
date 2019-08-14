@@ -1,33 +1,58 @@
-function getForce(x, y) {  /* Function for force on object at point(x,y) */
+function getForce(x, y) {
+  /* Function for force on object at point(x,y) */
 
   //Projectile in Earth's gravitational field
-
-      if (y>0) {
-              force = new Vector(0,0);
-              v.info_array[0] = 0, v.info_array[1] = 0;
-              return force;
-            }
-
-      force = new Vector(0,mass*gravity);
+  if (is_Projectile) {
+    if (y > 0) {
+      force = new Vector(0, 0);
+      v.info_array[0] = 0, v.info_array[1] = 0;
       return force;
+    }
 
-  /* //Spring in x direction
-  force = new Vector(-k * x, 0);
-  return force; */
+    force = new Vector(0, mass * gravity);
+    return force;
+  }
+   //Spring in x direction
+  else if(is_Spring){
+     force = new Vector(-k * x, 0);
+     return force;
+  }
+}
+
+function setup() {
+  /* Setup the animation */
+
+  var is_Spring = false;
+  var is_Projectile = false;
+
+  var buttonProjectile = createButton("<b>Start/Reset Projectile Simulation</b>");
+  buttonProjectile.size(100, 50);
+  buttonProjectile.mousePressed(resetSketchProjectile);
+  var buttonSpring = createButton("<b>Start/Reset Spring Simulation</b>");
+  buttonSpring.size(100, 50);
+  buttonSpring.mousePressed(resetSketchSpring);
+  resetSketchSpring();
 
 }
 
-function setup() { /* Setup the animation */
-
-  /* initialize(mass=10, gravity=9.8, delta_t=0.03125, px= -500, py=0, vx=0, vy=0, radius=20, //Spring in x direction
-    mu=0, k=1, accel_magnif=1, vel_magnif=1); */
-
-   initialize(mass=10, gravity=9.8, delta_t=0.1, px=0, py=0, vx=50, vy=-50, radius=20, //Projectile in Earth's gravitational field
-    mu=0, k=0, accel_magnif=3.5, vel_magnif=0.5);
-
+function resetSketchProjectile() {
+  is_Projectile = true;
+  is_Spring = false;
+  initialize(mass = 10, gravity = 9.8, delta_t = 0.1, px = 0, py = 0, vx = 50, vy = -50, radius = 20, //Projectile in Earth's gravitational field
+    mu = 0, k = 0, accel_magnif = 3.5, vel_magnif = 0.5);
 }
 
-function draw() { /* The draw loop which is called continuously */
+function resetSketchSpring() {
+  is_Spring = true;
+  is_Projectile = false;
+  initialize(mass = 10, gravity = 9.8, delta_t = 0.03125, px = -500, py = 0, vx = 0, vy = 0, radius = 20, //Spring in x direction
+    mu = 0, k = 1, accel_magnif = 1, vel_magnif = 1);
+}
+
+
+//createButton("reset");
+function draw() {
+  /* The draw loop which is called continuously */
 
   translate(width / 2, height / 2);
 
@@ -106,11 +131,12 @@ function initialize(Mass, Gravity, Delta_t, Px, Py, Vx, Vy, Radius, Mu, K, Accel
 }
 
 
-class Vector { /* custom Vector class */
+class Vector {
+  /* custom Vector class */
 
   constructor(x, y) {
-    this.info_array = [x,y,sqrt(x*x+y*y),arctan(y,x),1]
-    this.color_array = [0,0,0];
+    this.info_array = [x, y, sqrt(x * x + y * y), arctan(y, x), 1]
+    this.color_array = [0, 0, 0];
   }
 
   setColor(rgb_color_array) {
@@ -144,25 +170,29 @@ class Vector { /* custom Vector class */
 
 }
 
-function drawVector(x, y, vector){ /* Function to draw a vector */
-  drawArrow(x,y,x+vector.info_array[4]*vector.info_array[0],y+vector.info_array[4]*vector.info_array[1], vector.color_array);
+function drawVector(x, y, vector) {
+  /* Function to draw a vector */
+  drawArrow(x, y, x + vector.info_array[4] * vector.info_array[0], y + vector.info_array[4] * vector.info_array[1], vector.color_array);
 }
 
-function scaleVector(v, c) { /* Function to scale a vector's magnitude by a constant */
+function scaleVector(v, c) {
+  /* Function to scale a vector's magnitude by a constant */
   v_new = new Vector(c * v.info_array[0], c * v.info_array[1]);
   v_new.setColor(v.color_array);
   v_new.setMagnif(v.info_array[4]);
   return v_new;
 }
 
-function shrinkVector(v, c) { /* Function to divide a vector's magnitude by a constant */
+function shrinkVector(v, c) {
+  /* Function to divide a vector's magnitude by a constant */
   v_new = new Vector(v.info_array[0] / c, v.info_array[1] / c);
   v_new.setColor(v.color_array);
   v_new.setMagnif(v.info_array[4]);
   return v_new;
 }
 
-function drawArrow(x1, y1, x2, y2, color_array) { /* Function to draw an arrow */
+function drawArrow(x1, y1, x2, y2, color_array) {
+  /* Function to draw an arrow */
   stroke(color_array[0], color_array[1], color_array[2]);
   fill(color_array[0], color_array[1], color_array[2]);
   s = dist(x1, y1, x2, y2) / 10;
@@ -176,7 +206,8 @@ function drawArrow(x1, y1, x2, y2, color_array) { /* Function to draw an arrow *
   fill(0, 0, 0);
 }
 
-function arctan(y, x) { /* Custom arctan function */
+function arctan(y, x) {
+  /* Custom arctan function */
   y_abs = abs(y);
   x_abs = abs(x);
   if (x >= 0 && y <= 0) {
@@ -191,15 +222,18 @@ function arctan(y, x) { /* Custom arctan function */
   return 0;
 }
 
-function sin_point(x, y) { /* Cusom sine function */
-  return - signum(y) * abs(sin(arctan(y, x)));
+function sin_point(x, y) {
+  /* Cusom sine function */
+  return -signum(y) * abs(sin(arctan(y, x)));
 }
 
-function cos_point(x, y) { /* Custom cosine function */
+function cos_point(x, y) {
+  /* Custom cosine function */
   return signum(x) * abs(cos(arctan(y, x)));
 }
 
-function signum(f) { /* signum function */
+function signum(f) {
+  /* signum function */
   if (f > 0) {
     return 1.0;
   } else if (f < 0) {
