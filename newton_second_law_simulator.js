@@ -13,8 +13,8 @@ function draw() {
 }
 
 function initializeSimulations() {
-  number_simulations = 2;
-  simulation_names = ["Projectile", "Spring"];
+  number_simulations = 3;
+  simulation_names = ["Projectile", "Spring", "Circular Motion"];
 
   simulation_functions = [
     function resetSketchProjectile() {
@@ -24,6 +24,10 @@ function initializeSimulations() {
     function resetSketchSpring() {
       initializePhysics(mass = 10, gravity = 9.8, delta_t = 0.03125, px = -500, py = 0, vx = 0, vy = 0, radius = 20, //Spring in x direction
         mu = 0, k = 1, accel_magnif = 1, vel_magnif = 1, simulation = 1);
+    },
+    function resetSketchCircularOrbit() {
+      initializePhysics(mass = 0.01, gravity = 9.8, delta_t = 0.0078125, px = -150, py = 0, vx = 0, vy = -1500, radius = 20, //Spring in x direction
+        mu = 0, k = 1, accel_magnif = 0.005, vel_magnif = 0.05, simulation = 2);
     }
   ];
 
@@ -42,16 +46,21 @@ function initializeSimulations() {
     function getForceSpring(x, y) {
       force = new Vector(-k * x, 0);
       return force;
+    },
+
+    function getForceCircularOrbit(x, y) {
+      force = new Vector(-x, -y);
+      return force;
     }
   ];
 
   for (var i = 0; i < number_simulations; i++) {
-    button = createButton("<b>Start/Reset " + simulation_names[i] + " Simulation</b>");
-    button.size(100, 50);
+    button = createButton("<b>Start/Reset<p>" + simulation_names[i] + " Simulation</p></b>");
+    button.size(200, 70);
     button.mousePressed(simulation_functions[i]);
   }
 
-  simulation_functions[0]();
+  simulation_functions[2]();
 }
 
 function initializeCanvas() {
