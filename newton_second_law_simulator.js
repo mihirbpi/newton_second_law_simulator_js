@@ -12,29 +12,17 @@ function draw() {
   updatePosition();
 }
 
-function initializeCanvas() {
-  createCanvas(window.innerWidth - 10, window.innerHeight - 70);
-  colorMode(RGB);
-  background(255, 255, 255);
-  translate(width / 2, height / 2);
-  stroke(101, 67, 33);
-  line(-width, 0, width, 0);
-  stroke(0, 0, 0);
-  fill(0, 0, 0);
-  circle(0, 0, 5);
-}
-
 function initializeSimulations() {
   number_simulations = 2;
   simulation_names = ["Projectile", "Spring"];
 
   simulation_functions = [
     function resetSketchProjectile() {
-      initialize(mass = 10, gravity = 9.8, delta_t = 0.1, px = 0, py = 0, vx = 50, vy = -50, radius = 20, //Projectile in Earth's gravitational field
+      initializePhysics(mass = 10, gravity = 9.8, delta_t = 0.1, px = 0, py = 0, vx = 50, vy = -50, radius = 20, //Projectile in Earth's gravitational field
         mu = 0, k = 0, accel_magnif = 3.5, vel_magnif = 0.5, simulation = 0);
     },
     function resetSketchSpring() {
-      initialize(mass = 10, gravity = 9.8, delta_t = 0.03125, px = -500, py = 0, vx = 0, vy = 0, radius = 20, //Spring in x direction
+      initializePhysics(mass = 10, gravity = 9.8, delta_t = 0.03125, px = -500, py = 0, vx = 0, vy = 0, radius = 20, //Spring in x direction
         mu = 0, k = 1, accel_magnif = 1, vel_magnif = 1, simulation = 1);
     }
   ];
@@ -71,6 +59,37 @@ function initializeSimulations() {
   simulation_functions[0]();
 }
 
+function initializeCanvas() {
+  createCanvas(window.innerWidth - 10, window.innerHeight - 70);
+  colorMode(RGB);
+  background(255, 255, 255);
+  translate(width / 2, height / 2);
+  stroke(101, 67, 33);
+  line(-width, 0, width, 0);
+  stroke(0, 0, 0);
+  fill(0, 0, 0);
+  circle(0, 0, 5);
+}
+
+/* function to initialize Newton's Law */
+function initializePhysics(m, g, dt, px, py, vx, vy, r, µ, K, a_magnif, v_magnif, selected_sim) {
+
+  mass = m;
+  gravity = g;
+  delta_t = dt;
+  p = new Vector(px, py);
+  v = new Vector(vx, vy);
+  radius = r;
+  mu = µ;
+  k = K;
+  accel_magnif = a_magnif;
+  accel_color = [0, 255, 0];
+  vel_magnif = v_magnif;
+  vel_color = [255, 0, 0];
+
+  selectSimulation(selected_sim);
+}
+
 function initializePosition() {
   circle(p.info_array[0], p.info_array[1], radius);
 
@@ -95,25 +114,6 @@ function selectSimulation(selection) {
       options[i] = false;
     }
   }
-}
-
-/* function to initialize Newton's law and create canvas */
-function initialize(m, g, dt, px, py, vx, vy, r, µ, K, a_magnif, v_magnif, selected_sim) {
-
-  mass = m;
-  gravity = g;
-  delta_t = dt;
-  p = new Vector(px, py);
-  v = new Vector(vx, vy);
-  radius = r;
-  mu = µ;
-  k = K;
-  accel_magnif = a_magnif;
-  accel_color = [0, 255, 0];
-  vel_magnif = v_magnif;
-  vel_color = [255, 0, 0];
-
-  selectSimulation(selected_sim);
 }
 
 function updateCanvas() {
@@ -143,11 +143,6 @@ function updatePosition() {
   drawVector(p.info_array[0], p.info_array[1], v);
 
   p.add(scaleVector(v, delta_t));
-}
-
-function getForce(x, y) {
-  /* Function for force on object at point(x,y) */
-  return simulation_force_functions[selected_simulation](x, y);
 }
 
 class Vector {
@@ -223,6 +218,11 @@ function drawArrow(x1, y1, x2, y2, color_array) {
   line(x1, y1, x2, y2);
   stroke(0, 0, 0);
   fill(0, 0, 0);
+}
+
+function getForce(x, y) {
+  /* Function for force on object at point(x,y) */
+  return simulation_force_functions[selected_simulation](x, y);
 }
 
 function arctan(y, x) {
