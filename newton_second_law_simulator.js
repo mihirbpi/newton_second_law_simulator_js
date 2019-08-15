@@ -85,6 +85,10 @@ function initializePhysics(m, g, dt, px, py, vx, vy, r, µ, K, a_magnif, v_magni
   selectSimulation(selected_sim);
 }
 
+function selectSimulation(selection) {
+  selected_simulation = selection;
+}
+
 function initializePosition() {
   circle(p.info_array[0], p.info_array[1], radius);
 
@@ -98,10 +102,6 @@ function initializePosition() {
   a.setMagnif(accel_magnif);
   drawVector(p.info_array[0], p.info_array[1], v);
   drawVector(p.info_array[0], p.info_array[1], a);
-}
-
-function selectSimulation(selection) {
-  selected_simulation = selection;
 }
 
 function updateCanvas() {
