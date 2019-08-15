@@ -22,8 +22,8 @@ function initializeSimulations() {
         mu = 0, k = 0, accel_magnif = 3.5, vel_magnif = 0.5, simulation = 0);
     },
     function resetSketchSpring() {
-      initializePhysics(mass = 10, gravity = 9.8, delta_t = 0.03125, px = -500, py = 0, vx = 0, vy = 0, radius = 20, //Spring in x direction
-        mu = 0, k = 1, accel_magnif = 1, vel_magnif = 1, simulation = 1);
+      initializePhysics(mass = 10, gravity = 9.8, delta_t = 0.15625, px = 0, py = 100, vx = 0, vy = 0, radius = 20, //Spring in x direction
+        mu = 0, k = 1, accel_magnif = 4, vel_magnif = 2, simulation = 1);
     },
     function resetSketchCircularOrbit() {
       initializePhysics(mass = 0.01, gravity = 9.8, delta_t = 0.0078125, px = -150, py = 0, vx = 0, vy = -1500, radius = 20, //Spring in x direction
@@ -44,7 +44,7 @@ function initializeSimulations() {
     },
 
     function getForceSpring(x, y) {
-      force = new Vector(-k * x, 0);
+      force = new Vector(0, -k * y);
       return force;
     },
 
@@ -60,7 +60,7 @@ function initializeSimulations() {
     button.mousePressed(simulation_functions[i]);
   }
 
-  simulation_functions[2]();
+  simulation_functions[0]();
 }
 
 function initializeCanvas() {
