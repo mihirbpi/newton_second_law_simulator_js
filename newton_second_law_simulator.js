@@ -45,11 +45,6 @@ function initializeSimulations() {
     }
   ];
 
-  options = [];
-  for (var i = 0; i < number_simulations; i++) {
-    options.push(false);
-  }
-
   for (var i = 0; i < number_simulations; i++) {
     button = createButton("<b>Start/Reset " + simulation_names[i] + " Simulation</b>");
     button.size(100, 50);
@@ -106,14 +101,7 @@ function initializePosition() {
 }
 
 function selectSimulation(selection) {
-  selected_simulation = selection
-  for (var i = 0; i < options.length; i++) {
-    if (i == selected_simulation) {
-      options[i] = true;
-    } else {
-      options[i] = false;
-    }
-  }
+  selected_simulation = selection;
 }
 
 function updateCanvas() {
